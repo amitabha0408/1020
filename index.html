@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 標籤閉合範例</title>
+    <!-- 載入 Tailwind CSS 以提供響應式和現代化的樣式 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 使用 Inter 字體 */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10 min-h-screen flex flex-col items-center justify-center">
+
+    <div class="max-w-4xl w-full bg-white shadow-xl rounded-xl p-6 md:p-8 space-y-4">
+        <h1 class="text-3xl font-bold text-gray-800 border-b-2 pb-2 mb-6">
+            正確閉合的 P 標籤範例
+        </h1>
+        
+        <!-- 這裡有 10 個開始 <p> 標籤和 10 個結束 </p> 標籤 -->
+
+        <!-- 段落 1/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-50 rounded-lg">
+            這是一個正確閉合的第一個段落。
+        </p>
+
+        <!-- 段落 2/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-100 rounded-lg">
+            每個開始標籤 `<p>` 都必須有一個對應的結束標籤 `</p>`。
+        </p>
+
+        <!-- 段落 3/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-50 rounded-lg">
+            良好的 HTML 結構對於瀏覽器正確解析和渲染頁面至關重要。
+        </p>
+
+        <!-- 段落 4/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-100 rounded-lg">
+            如果標籤沒有閉合，可能會導致樣式錯誤或內容溢出。
+        </p>
+
+        <!-- 段落 5/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-50 rounded-lg">
+            此範例展示了段落數量是 10 個，標籤數量完美匹配。
+        </p>
+
+        <!-- 段落 6/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-100 rounded-lg">
+            這是第六個段落，用於確保計數正確。
+        </p>
+
+        <!-- 段落 7/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-50 rounded-lg">
+            錯誤提示「開始：10個，結束：7個」意味著有 3 個 `<p>` 缺少了 `</p>`。
+        </p>
+
+        <!-- 段落 8/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-100 rounded-lg">
+            在實際編碼中，使用現代編輯器可以幫助自動閉合標籤。
+        </p>
+
+        <!-- 段落 9/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-50 rounded-lg">
+            即使是微小的語法錯誤也可能導致預期之外的結果。
+        </p>
+
+        <!-- 段落 10/10 -->
+        <p class="text-gray-600 p-2 bg-indigo-100 rounded-lg font-semibold">
+            這是第十個段落，標籤數量現在是平衡的。
+        </p>
+    </div>
+
+</body>
+</html>
