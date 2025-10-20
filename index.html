@@ -252,9 +252,11 @@
             finalFirebaseConfig = null;
         }
 
-        // Firestore 路徑必須使用 finalAppId
-        const CONTROL_DOC_PATH = `artifacts/${finalAppId}/public/data/classroom/teacher_control`;
-        const ANSWERS_COL_PATH = `artifacts/${finalAppId}/public/data/classroom/answers`;
+        // ====== 路徑修正：確保 Collection 為奇數段落，Document 為偶數段落 ======
+        // Document Path (6 segments)
+        const CONTROL_DOC_PATH = `artifacts/${finalAppId}/public/data/controls/teacher_control`; 
+        // Collection Path (5 segments)
+        const ANSWERS_COL_PATH = `artifacts/${finalAppId}/public/data/answers_col`; 
 
         // --- Firebase 初始化和認證 ---
         window.addEventListener('load', async () => {
