@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>課堂互動系統 - 教學工具</title>
+    <title>妙好人教育學院課堂即時互動系統</title>
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 載入 Noto Sans TC (Inter 的替代，更適合中文) -->
@@ -43,6 +43,61 @@
             padding: 0.75rem 0;
             border-bottom: 1px dashed #e0e0e0;
         }
+
+        /* --- 象棋卜卦樣式 (從 生成卦象.txt 引入) --- */
+        /* 自定義圓形棋子樣式 */
+        .piece-circle {
+            width: 3.5rem; /* Adjusted for smaller container */
+            height: 3.5rem; /* Adjusted for smaller container */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 1.5rem; /* Adjusted size */
+            font-weight: 700;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .piece-circle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 紅棋樣式 (陽) */
+        .red-piece {
+            background-color: #A31E22; /* 深紅色 */
+            color: #FFD700; /* 金黃色字體 */
+            border: 3px solid #FFD700;
+        }
+
+        /* 黑棋樣式 (陰) */
+        .black-piece {
+            background-color: #2D3748; /* 深藍灰色 */
+            color: #C0C0C0; /* 銀色字體 */
+            border: 3px solid #C0C0C0;
+        }
+
+        /* 卦象佈局 (5個棋子) */
+        .guaxiang-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 0.25rem;
+            width: 14rem; /* 固定寬度，保持佈局穩定 */
+            height: 14rem; /* 固定高度 */
+            margin: 1rem auto;
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        /* 卦象位置編號 */
+        .guaxiang-grid > div:nth-child(1) { grid-area: 2 / 2 / 3 / 3; } /* Center: 中間 */
+        .guaxiang-grid > div:nth-child(2) { grid-area: 2 / 1 / 3 / 2; } /* Left: 左邊 */
+        .guaxiang-grid > div:nth-child(3) { grid-area: 2 / 3 / 3 / 4; } /* Right: 右邊 */
+        .guaxiang-grid > div:nth-child(4) { grid-area: 1 / 2 / 2 / 3; } /* Top: 上面 */
+        .guaxiang-grid > div:nth-child(5) { grid-area: 3 / 2 / 4 / 3; } /* Bottom: 下面 */
     </style>
 </head>
 <body>
@@ -50,7 +105,8 @@
     <div id="app" class="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <!-- 應用程式主容器 -->
         <div id="content-container" class="w-full max-w-4xl bg-white p-6 md:p-10 rounded-xl main-card">
-            <h1 class="text-3xl md:text-4xl font-bold text-center text-indigo-600 mb-8">課堂即時互動系統</h1>
+            <!-- 標題已更新 -->
+            <h1 class="text-3xl md:text-4xl font-bold text-center text-indigo-600 mb-8">妙好人教育學院課堂即時互動系統</h1>
             
             <!-- 初始入口畫面 -->
             <div id="view-home" class="view-panel space-y-6 text-center">
@@ -91,8 +147,37 @@
                         <!-- 學生即時結果將顯示在此 -->
                         <p class="text-gray-500 text-center">等待學生作答...</p>
                     </div>
-                    <p id="teacher-user-id" class="text-xs text-gray-400 mt-4 break-words">教師用戶ID: 載入中...</p>
                 </div>
+                
+                <!-- 卦象生成工具區塊 (新增) -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h3 class="text-xl font-semibold mb-4 text-center text-red-600">
+                        一鍵生成卦象工具 (教師輔助)
+                    </h3>
+                    <div class="flex justify-center mb-4">
+                        <button
+                            onclick="executeDivination()"
+                            class="w-full sm:w-80 px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 transform hover:scale-[1.02]"
+                        >
+                            一鍵生成卦象
+                        </button>
+                    </div>
+
+                    <!-- 卦象顯示區 -->
+                    <div id="divination-result-area" class="p-4 bg-yellow-50 rounded-lg border border-yellow-200 hidden">
+                        <p class="text-center text-sm font-medium text-gray-700 mb-2">
+                            卜卦時間 (UTC+8): <span id="teacher-datetime-output"></span>
+                        </p>
+                        <div class="guaxiang-grid" id="teacher-guaxiang-board">
+                            <!-- 棋子將由 JavaScript 渲染至此 -->
+                        </div>
+                        <div id="teacher-guaxiang-details" class="mt-4 space-y-1 text-sm text-gray-700">
+                            <!-- 卦象詳細解釋將顯示在此 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <p id="teacher-user-id" class="text-xs text-gray-400 mt-4 break-words">教師用戶ID: 載入中...</p>
             </div>
 
             <!-- 學生登入介面 -->
@@ -222,6 +307,35 @@
         let unsubscribeTeacherControl = null;
         let unsubscribeStudentAnswers = null;
 
+        // --- 象棋卜卦數據與變數 (從 生成卦象.txt 引入) ---
+        const ALL_PIECES = [
+            { name: "帥", char: "帥", color: "紅", type: "將", element: "金", organ: "肺/大腸", meaning: "自我/核心目標" },
+            { name: "將", char: "將", color: "黑", type: "將", element: "金", organ: "肺/大腸", meaning: "挑戰/對手核心" },
+            { name: "仕", char: "仕", color: "紅", type: "士", element: "金", organ: "肺/大腸", meaning: "名聲/權力/貴人" },
+            { name: "士", char: "士", color: "黑", type: "士", element: "金", organ: "肺/大腸", meaning: "規範/制度/框架" },
+            { name: "相", char: "相", color: "紅", type: "象", element: "火", organ: "心/小腸", meaning: "情緒/內在/財產" },
+            { name: "象", char: "象", color: "黑", type: "象", element: "火", organ: "心/小腸", meaning: "壓力/耗損/困擾" },
+            { name: "俥", char: "俥", color: "紅", type: "車", element: "木", organ: "肝/膽", meaning: "行動力/能量/外援" },
+            { name: "車", char: "車", color: "黑", type: "車", element: "木", organ: "肝/膽", meaning: "障礙/拖延/考驗" },
+            { name: "傌", char: "傌", color: "紅", type: "馬", element: "木", organ: "心包/三焦", meaning: "人際/溝通/變動" },
+            { name: "馬", char: "馬", color: "黑", type: "馬", element: "木", organ: "心包/三焦", meaning: "小人/是非/阻礙" },
+            { name: "炮", char: "炮", color: "紅", type: "炮", element: "水", organ: "腎/膀胱", meaning: "爆發力/突破/貴人" },
+            { name: "包", char: "包", color: "黑", type: "炮", element: "水", organ: "腎/膀胱", meaning: "潛藏/隱憂/是非" },
+            { name: "兵", char: "兵", color: "紅", type: "兵", element: "土", organ: "脾/胃", meaning: "踏實/成果/付出" },
+            { name: "卒", char: "卒", color: "黑", type: "兵", element: "土", organ: "脾/胃", meaning: "消耗/壓力/辛勞" },
+        ];
+
+        // 卜卦位置及其代表意義
+        const POSITIONS = [
+            { id: 'center', name: "中間", meaning: "主狀態、自我", detail: "代表您當前的**主狀態、自我**與核心問題所在。" },
+            { id: 'left', name: "左邊", meaning: "平輩男/事業", detail: "代表**平輩男性、工作/事業**上的外在動能與助力。" },
+            { id: 'right', name: "右邊", meaning: "平輩女/財富", detail: "代表**平輩女性、財富/資源**上的內在儲備與穩定度。" },
+            { id: 'top', name: "上面", meaning: "長輩/上司/過去", detail: "代表**長輩、師長、上司**或過去的影響與根源。" },
+            { id: 'bottom', name: "下面", meaning: "晚輩/部屬/未來", detail: "代表**晚輩、部屬、子孫**或未來的發展與潛力。" },
+        ];
+
+        let drawnPieces = []; // 儲存本次卜卦的棋子結果
+
         // --- 使用者提供的 Firebase 配置 (作為備用) ---
         const USER_PROVIDED_CONFIG = {
             apiKey: "AIzaSyAz89tuv85QckiuSp9ee0f-iB8lPUsajew",
@@ -304,6 +418,105 @@
                 document.getElementById('loading-message').classList.add('hidden');
             }
         });
+
+        // --- 卦象生成邏輯 (Teacher Utility Logic) ---
+
+        /**
+         * 獲取當前日期時間 (UTC+8)
+         */
+        const getCurrentDateTime = () => {
+            const now = new Date();
+            // 轉換到 UTC+8 (台灣時區)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const utc8Offset = 8 * 3600000;
+            const utc8 = new Date(utc + utc8Offset);
+
+            const options = {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Taipei'
+            };
+            return utc8.toLocaleString('zh-TW', options);
+        }
+
+        /**
+         * 隨機抽取 5 個不重複的棋子。
+         */
+        const drawFivePieces = () => {
+            const availableIndices = Array.from({ length: ALL_PIECES.length }, (_, i) => i);
+            const selectedIndices = [];
+            
+            while (selectedIndices.length < 5) {
+                const randomIndex = Math.floor(Math.random() * availableIndices.length);
+                const pieceIndex = availableIndices.splice(randomIndex, 1)[0];
+                selectedIndices.push(pieceIndex);
+            }
+
+            // 將抽出的棋子與固定的位置結合
+            return selectedIndices.map((index, i) => ({
+                ...POSITIONS[i], // 位置資訊 (name, meaning, detail, id)
+                piece: ALL_PIECES[index] // 棋子資訊 (char, color, element, organ, etc.)
+            }));
+        }
+
+        /**
+         * 渲染棋子到介面。
+         */
+        const renderPieces = (pieces) => {
+            const container = document.getElementById('teacher-guaxiang-board');
+            const detailsDiv = document.getElementById('teacher-guaxiang-details');
+            
+            container.innerHTML = '';
+            detailsDiv.innerHTML = '';
+
+            let detailsHTML = '<ul class="list-disc list-inside space-y-2">';
+
+            pieces.forEach((item) => {
+                const pieceDiv = document.createElement('div');
+                pieceDiv.className = 'flex justify-center items-center';
+                pieceDiv.innerHTML = `
+                    <div class="piece-circle ${item.piece.color === '紅' ? 'red-piece' : 'black-piece'}">
+                        ${item.piece.char}
+                    </div>
+                `;
+                // title 屬性提供滑鼠懸停提示
+                pieceDiv.title = `位置: ${item.name} (${item.meaning})\n棋子: ${item.piece.name}\n五行: ${item.piece.element}\n臟腑: ${item.piece.organ}\n代表: ${item.piece.meaning}`;
+
+                container.appendChild(pieceDiv);
+
+                // 生成詳細解釋 HTML
+                detailsHTML += `
+                    <li>
+                        <strong class="text-indigo-600">${item.name} (${item.meaning})</strong>: 
+                        抽到【<span class="${item.piece.color === '紅' ? 'text-red-600' : 'text-gray-800'}">${item.piece.name}</span>】
+                        | 五行: <span class="font-bold">${item.piece.element}</span> 
+                        | 臟腑: ${item.piece.organ} 
+                        | 能量核心: ${item.piece.meaning}
+                    </li>
+                `;
+            });
+            
+            detailsHTML += '</ul>';
+            detailsDiv.innerHTML = detailsHTML;
+        }
+
+        /**
+         * 執行卜卦主程式。
+         */
+        window.executeDivination = () => {
+            // 1. 生成棋子
+            drawnPieces = drawFivePieces();
+
+            // 2. 渲染棋盤與詳細資訊
+            renderPieces(drawnPieces);
+
+            // 3. 更新介面資訊
+            document.getElementById('teacher-datetime-output').textContent = getCurrentDateTime();
+            document.getElementById('divination-result-area').classList.remove('hidden');
+
+            console.log("卦象已生成:", drawnPieces);
+        }
 
         // --- 視圖管理 (View Management) ---
 
@@ -543,7 +756,10 @@
             document.querySelectorAll('.answer-button').forEach(btn => {
                 btn.classList.remove('disabled', 'bg-gray-400');
                 // 重新設置原始顏色
-                const answer = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                const onclickAttr = btn.getAttribute('onclick');
+                const answerMatch = onclickAttr ? onclickAttr.match(/'([^']+)'/) : null;
+                const answer = answerMatch ? answerMatch[1] : '';
+
                 let colorClass = '';
                 if (activeMode === 'A') {
                     colorClass = (answer === 'O' ? 'bg-green-500' : 'bg-red-500');
@@ -869,6 +1085,7 @@
         window.setEraser = setEraser;
         window.setLineWidth = setLineWidth;
         window.clearCanvas = clearCanvas;
+        window.executeDivination = executeDivination; // 暴露新功能
 
     </script>
 </body>
